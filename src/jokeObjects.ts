@@ -3,7 +3,7 @@ export enum JokeSystemLanguage {
   German = "de",
   English = "en",
   Italian = "it",
-  Russian = "ru"
+  Russian = "ru",
 }
 
 export enum JokeLanguage {
@@ -12,7 +12,7 @@ export enum JokeLanguage {
   English = "en",
   Spanish = "es",
   French = "fr",
-  Portuguese = "pt"
+  Portuguese = "pt",
 }
 
 export enum JokeFlag {
@@ -21,13 +21,13 @@ export enum JokeFlag {
   POLITICAL = "political",
   RACIST = "racist",
   SEXIST = "sexist",
-  EXPLICIT = "explicit"
+  EXPLICIT = "explicit",
 }
 
 export enum JokeType {
   ANY = "any",
   SINGLE = "single",
-  TWO_PART = "twopart"
+  TWO_PART = "twopart",
 }
 
 export enum JokeCategory {
@@ -37,7 +37,7 @@ export enum JokeCategory {
   DARK = "Dark",
   PUN = "Pun",
   SPOOKY = "Spooky",
-  CHRISTMAS = "Christmas"
+  CHRISTMAS = "Christmas",
 }
 
 export interface JokeBaseResponse {
@@ -46,7 +46,7 @@ export interface JokeBaseResponse {
 }
 
 export interface JokeFlagsResponse extends JokeBaseResponse {
-  flags: string[]
+  flags: string[];
 }
 
 export interface JokeErrorResponse extends JokeBaseResponse {
@@ -66,13 +66,13 @@ export class JokeError extends Error {
 
     Object.setPrototypeOf(this, JokeError.prototype);
   }
-};
+}
 
 export interface JokePingResponse extends JokeBaseResponse {
   ping: string;
 }
 
-export interface JokeCategoriesResponse extends JokeBaseResponse{
+export interface JokeCategoriesResponse extends JokeBaseResponse {
   categories: string[];
   categoryAliases: JokeCategoryAliasesResponse[];
 }

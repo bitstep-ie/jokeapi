@@ -1,15 +1,32 @@
-name: CI - Build & Test
+name: CI/CD
 
 on:
   pull_request:
     branches:
-      - '**' # Runs for all PRs
+      - '**'  # Runs for all PRs
   push:
     branches:
-      - develop # Runs for all pushes to develop
+      - develop  # Runs for all pushes to develop
+  release:
+    types: [created]  # Runs when a new GitHub release is created
+
+env:
+  NODE_VERSION: 23.7.0
+  REGISTRY_URL: "https://registry.npmjs.org/"
 
 jobs:
+  prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: 
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm ci
+      - run: npx prettier --check .
+
   build-and-test:
+    name: Build & Test
     runs-on: ubuntu-latest
 
     steps:
@@ -19,7 +36,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 23.7.0
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
       - name: Install dependencies
@@ -30,3 +47,62 @@ jobs:
 
       - name: Build project
         run: npm run build
+
+  bump-version:
+    name: Bump Package Version
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Ensure we have full history to push changes
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Extract release version
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Bump package.json version
+        run: npm version $VERSION --no-git-tag-version
+
+      - name: Commit version bump
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add package.json package-lock.json
+          git commit -m "chore: bump version to $VERSION"
+          git push origin main
+
+  publish:
+    name: Publish to npm
+    needs: bump-version
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: ${{ env.REGISTRY_URL }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build package
+        run: npm run build
+
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
