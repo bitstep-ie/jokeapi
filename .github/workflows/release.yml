@@ -6,7 +6,7 @@ permissions:
 on:
   push:
     branches:
-      - main # 
+      - main #
 
 env:
   NODE_VERSION: 23.7.0
@@ -40,7 +40,6 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
 
-
       - name: Create Git tag
         run: |
           git tag ${{ env.current_version }}
@@ -54,10 +53,9 @@ jobs:
           new_version="$major.$new_minor.$patch"
           echo "New version: $new_version"
           echo "new_version=$new_version" >> $GITHUB_ENV
-      
 
       - name: Bump package.json version
-        run: | 
+        run: |
           npm version ${{ env.current_version }}
           git add package.json package-lock.json
           git commit -m "chore: bump version to ${{ env.current_version }}"
