@@ -1,0 +1,42 @@
+{
+  "name": "@bitstep/jokeapi",
+  "version": "0.0.0",
+  "description": "TS wrapper for Sv443's jokeapi",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "lint": "eslint . --ext .ts",
+    "prepublishOnly": "npm run build",
+    "test": "jest"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MadaManu/jokeapi.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/MadaManu/jokeapi/issues"
+  },
+  "homepage": "https://github.com/MadaManu/jokeapi#readme",
+  "dependencies": {
+    "axios": "^1.7.9"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.13.4",
+    "axios-mock-adapter": "^2.1.0",
+    "eslint": "^9.20.1",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "tsup": "^8.3.6",
+    "typescript": "^5.7.3"
+  }
+}
