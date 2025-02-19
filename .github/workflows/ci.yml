@@ -1,14 +1,17 @@
 name: CI/CD
 
+permissions:
+  contents: write
+
 on:
   pull_request:
     branches:
-      - '**'  # Runs for all PRs
+      - "**" # Runs for all PRs
   push:
     branches:
-      - develop  # Runs for all pushes to develop
+      - main # Runs for all pushes
   release:
-    types: [created]  # Runs when a new GitHub release is created
+    types: [created] # Runs when a new GitHub release is created
 
 env:
   NODE_VERSION: 23.7.0
@@ -20,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: 
+        with:
           node-version: ${{ env.NODE_VERSION }}
       - run: npm ci
       - run: npx prettier --check .
@@ -37,7 +40,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm install
@@ -58,7 +61,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Ensure we have full history to push changes
+          fetch-depth: 0 # Ensure we have full history to push changes
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
