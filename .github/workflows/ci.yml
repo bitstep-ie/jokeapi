@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
     branches:
-      - '**' # Runs for all PRs
+      - "**" # Runs for all PRs
   push:
     branches:
       - main # Runs for all pushes
@@ -14,7 +14,18 @@ env:
   REGISTRY_URL: "https://registry.npmjs.org/"
 
 jobs:
+  prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm ci
+      - run: npx prettier --check .
+
   build-and-test:
+    name: Build & Test
     runs-on: ubuntu-latest
 
     steps:
@@ -24,8 +35,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 23.7.0
-          cache: 'npm'
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
 
       - name: Install dependencies
         run: npm install
