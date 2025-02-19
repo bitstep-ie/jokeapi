@@ -1,4 +1,4 @@
-name: CI - Build & Test
+name: CI
 
 on:
   pull_request:
@@ -6,7 +6,12 @@ on:
       - '**' # Runs for all PRs
   push:
     branches:
-      - develop # Runs for all pushes to develop
+      - main # Runs for all pushes
+      - develop
+
+env:
+  NODE_VERSION: 23.7.0
+  REGISTRY_URL: "https://registry.npmjs.org/"
 
 jobs:
   build-and-test:
@@ -30,3 +35,4 @@ jobs:
 
       - name: Build project
         run: npm run build
+
