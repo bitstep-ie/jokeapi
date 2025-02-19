@@ -1,0 +1,90 @@
+name: Release
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches:
+      - main #
+
+env:
+  NODE_VERSION: 23.7.0
+  REGISTRY_URL: "https://registry.npmjs.org/"
+
+jobs:
+  bump-version:
+    name: Bump Package Version
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Ensure we have full history to push changes
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Extract release version
+        id: get_version
+        run: |
+          current_version=$(jq -r .version package.json)
+          echo "Current version: $current_version"
+          echo "current_version=$current_version" >> $GITHUB_ENV
+
+      - name: Git user config
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
+      - name: Create Git tag
+        run: |
+          git tag ${{ env.current_version }}
+          git push origin ${{ env.current_version }}
+
+      - name: Bump develop version
+        run: |
+          git checkout develop
+          IFS='.' read -r major minor patch <<< "$current_version"
+          new_minor=$((minor + 1))
+          new_version="$major.$new_minor.$patch"
+          echo "New version: $new_version"
+          echo "new_version=$new_version" >> $GITHUB_ENV
+
+      - name: Bump package.json version
+        run: |
+          npm version ${{ env.current_version }}
+          git add package.json package-lock.json
+          git commit -m "chore: bump version to ${{ env.current_version }}"
+          git push origin develop
+
+  publish:
+    name: Publish to npm
+    needs: bump-version
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Ensure we have full history to push changes
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: ${{ env.REGISTRY_URL }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build package
+        run: npm run build
+
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
