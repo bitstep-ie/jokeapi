@@ -62,19 +62,21 @@ export class JokeAPI {
                 type: JokeType = JokeType.ANY, 
                 lang: JokeLanguage = JokeLanguage.English,
                 contains: string = "",
-                amount: number = 1
+                amount: number = 1,
+                safemode: boolean = false
               ): Promise<JokeResponse> {
     let url = `joke/${category.join(',')}`;
     let params = {
-      blacklist: banFlags.join(','),
+      blacklist: safemode ? '' : banFlags.join(','),
       type: type === JokeType.ANY ? "" : type,
       contains: encodeURIComponent(contains),
       lang: lang,
-      amount: amount
+      amount: amount,
+      "safe-mode": safemode
     };
 
     try {
-      const response = await this.axiosInstance.get<JokeResponse>("joke/Any", {params});
+      const response = await this.axiosInstance.get<JokeResponse>(url, {params});
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {

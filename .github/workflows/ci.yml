@@ -1,0 +1,32 @@
+name: CI - Build & Test
+
+on:
+  pull_request:
+    branches:
+      - '**' # Runs for all PRs
+  push:
+    branches:
+      - develop # Runs for all pushes to develop
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 23.7.0
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build project
+        run: npm run build
