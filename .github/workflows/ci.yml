@@ -81,7 +81,7 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git add package.json package-lock.json
           git commit -m "chore: bump version to $VERSION"
-          git push origin main
+          git push origin HEAD:main
 
   publish:
     name: Publish to npm
