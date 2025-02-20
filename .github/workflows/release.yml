@@ -50,13 +50,13 @@ jobs:
           git checkout develop
           IFS='.' read -r major minor patch <<< "$current_version"
           new_minor=$((minor + 1))
-          new_version="$major.$new_minor.$patch"
+          new_version="$major.$new_minor.0"
           echo "New version: $new_version"
           echo "new_version=$new_version" >> $GITHUB_ENV
 
       - name: Bump package.json version
         run: |
-          npm version ${{ env.current_version }}
+          npm version ${{ env.current_version }} --no-git-tag-version
           git add package.json package-lock.json
           git commit -m "chore: bump version to ${{ env.current_version }}"
           git push origin develop
