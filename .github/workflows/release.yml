@@ -28,17 +28,17 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Git user config
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
       - name: Extract release version
         id: get_version
         run: |
           current_version=$(jq -r .version package.json)
           echo "Current version: $current_version"
           echo "current_version=$current_version" >> $GITHUB_ENV
-
-      - name: Git user config
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
 
       - name: Create Git tag
         run: |
@@ -56,6 +56,7 @@ jobs:
 
       - name: Bump package.json version
         run: |
+          git status
           npm version ${{ env.current_version }} --no-git-tag-version
           git add package.json package-lock.json
           git commit -m "chore: bump version to ${{ env.current_version }}"
