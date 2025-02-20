@@ -56,6 +56,7 @@ jobs:
 
       - name: Bump package.json version
         run: |
+          git status
           npm version ${{ env.current_version }} --no-git-tag-version
           git add package.json package-lock.json
           git commit -m "chore: bump version to ${{ env.current_version }}"
