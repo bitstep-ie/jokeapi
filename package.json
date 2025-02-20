@@ -1,6 +1,6 @@
 {
   "name": "@bitstep/jokeapi",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "TS wrapper for Sv443's jokeapi",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
