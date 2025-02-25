@@ -5,21 +5,25 @@ TS wrapper for Sv443's jokeapi (https://jokeapi.dev/)
 ## Install
 
 ```
-npm install jokeapi
+npm i @bitstep/jokeapi
 ```
 
 ## Usage
 
-TODO - add instructions on how to use the client
+```
+let jokeClient = new JokeAPI()
+let joke = await jokeClient.getRandomJoke()
+```
 
 ## Mapped endpoints
 
-| Endpoint    | Method          |
-| ----------- | --------------- |
-| /ping       | ping()          |
-| /categories | getCategories() |
-| /flags      | getFlags()      |
-| /joke       | getJoke()       |
+| Endpoint    | Method                  |
+| ----------- | ----------------------- |
+| /ping       | ping()                  |
+| /categories | getCategories()         |
+| /flags      | getFlags()              |
+| /joke       | getJoke()               |
+| /joke       | getRandomJoke()         |
 
 ## Support
 
