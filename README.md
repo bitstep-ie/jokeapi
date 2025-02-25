@@ -17,13 +17,13 @@ let joke = await jokeClient.getRandomJoke()
 
 ## Mapped endpoints
 
-| Endpoint    | Method                  |
-| ----------- | ----------------------- |
-| /ping       | ping()                  |
-| /categories | getCategories()         |
-| /flags      | getFlags()              |
-| /joke       | getJoke()               |
-| /joke       | getRandomJoke()         |
+| Endpoint    | Method          |
+| ----------- | --------------- |
+| /ping       | ping()          |
+| /categories | getCategories() |
+| /flags      | getFlags()      |
+| /joke       | getJoke()       |
+| /joke       | getRandomJoke() |
 
 ## Support
 
