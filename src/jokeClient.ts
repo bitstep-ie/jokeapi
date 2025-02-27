@@ -77,13 +77,15 @@ export class JokeAPI {
     safemode: boolean = false,
   ): Promise<JokeResponse> {
     let url = `joke/${category.join(",")}`;
+    if(safemode) {
+      url += "?safe-mode&"
+    }
     let params = {
-      blacklist: safemode ? "" : banFlags.join(","),
+      blacklistFlags: safemode ? "" : banFlags.join(","),
       type: type === JokeType.ANY ? "" : type,
       contains: encodeURIComponent(contains),
       lang: lang,
-      amount: amount,
-      "safe-mode": safemode,
+      amount: amount
     };
 
     try {
