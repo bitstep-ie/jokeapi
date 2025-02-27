@@ -42,7 +42,7 @@ describe("JokeAPI", () => {
     };
 
     mock.onGet(/^joke\/Any/).reply((config) => {
-      if (config.params?.blacklist || config.params?.contains) {
+      if (config.params?.blacklistFlags || config.params?.contains) {
         return [400, "These params are not expected to be set for this test"];
       }
       if (
@@ -86,16 +86,18 @@ describe("JokeAPI", () => {
     mock.onGet(/^joke\/Any/).reply((config) => {
       const params = new Map<string, any>(Object.entries(config.params));
 
-      if (config.params?.blacklist || config.params?.contains) {
+      if (config.params?.blacklistFlags || config.params?.contains) {
         return [400, "These params are not expected to be set for this test"];
       }
       if (
         config.params?.type != "single" ||
         config.params?.lang != "en" ||
-        config.params?.amount != 1 ||
-        params.get("safe-mode") != true
+        config.params?.amount != 1
       ) {
         return [400, "These params are expected to be set for this test"];
+      }
+      if (!config.url?.includes("safe-mode")) {
+        return [400, "safe-mode flag expected to be set"];
       }
       return [200, mockJoke];
     });
