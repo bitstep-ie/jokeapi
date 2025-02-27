@@ -96,7 +96,7 @@ describe("JokeAPI", () => {
       ) {
         return [400, "These params are expected to be set for this test"];
       }
-      if(!config.url?.includes("safe-mode")) {
+      if (!config.url?.includes("safe-mode")) {
         return [400, "safe-mode flag expected to be set"];
       }
       return [200, mockJoke];
